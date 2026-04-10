@@ -13,13 +13,13 @@ async function getDepartamentos() {
 
 
 /* =======================
-   PUT DEPARTAMENTO
-   (equivalente a localStorage.setItem - guarda/actualiza un departamento existente)
+   PATCH DEPARTAMENTO
+   (actualiza un departamento existente, en este caso su lista de empleados)
 ======================= */
-async function putDepartamento(id, departamento) {
+async function patchDepartamento(id, departamento) {
     try {
         const respuesta = await fetch(`http://localhost:3000/departamentos/${id}`, {
-            method: "PUT",
+            method: "PATCH",
             headers: {
                 "Content-Type": "application/json"
             },
@@ -28,8 +28,8 @@ async function putDepartamento(id, departamento) {
 
         return await respuesta.json();
     } catch (error) {
-        console.error("Error al guardar departamento", error);
+        console.error("Error al actualizar departamento", error);
     }
 }
 
-module.exports = { getDepartamentos, putDepartamento };
+module.exports = { getDepartamentos, patchDepartamento };

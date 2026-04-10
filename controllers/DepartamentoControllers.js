@@ -1,4 +1,4 @@
-const { getDepartamentos, putDepartamento } = require('../services/serviceDepartamento');
+const { getDepartamentos, patchDepartamento } = require('../services/serviceDepartamento');
 const Empleado = require('../models/Empleado');
 const Departamento = require('../models/Departamento');
 
@@ -26,7 +26,7 @@ exports.agregarEmpleados = async (req, res) => {
 
 
         departamentoEnStorage.listaEmpleados = this.listaEmpleados /* Actualizar la lista en el registro global */
-        await putDepartamento(departamentoEnStorage.id, departamentoEnStorage) /* Guardar en db.json en lugar de localStorage.setItem */
+        await patchDepartamento(departamentoEnStorage.id, { listaEmpleados: this.listaEmpleados }) /* Guardar en db.json usando PATCH */
 
         console.log("Empleado agregado: " + empleado.nombreEmpleado + " al departamento " + this.nombreDepartamento);
         res.status(200).json({ message: "Empleado agregado exitosamente" });

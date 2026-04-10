@@ -19,6 +19,16 @@
         }
       ],
       "id": "yaLko8v6p5k"
+    },
+    {
+      "nombreDepartamento": "Ingenieria",
+      "listaEmpleados": [
+        {
+          "nombreEmpleado": "Carlos Ruiz",
+          "puesto": "Desarrollador"
+        }
+      ],
+      "id": "WN1tyoOXuQE"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
