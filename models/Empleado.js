@@ -1,7 +1,7 @@
 class Empleado {
     constructor(nombreEmpleado, puesto) {
-        this.nombreEmpleado=nombreEmpleado
-        this.puesto=puesto
+        this.nombreEmpleado = nombreEmpleado
+        this.puesto = puesto
     }
 }
 

@@ -1,12 +1,25 @@
 {
-    "Listadoempleado": [
+  "departamentos": [
+    {
+      "nombreDepartamento": "Recursos Humanos",
+      "listaEmpleados": [
         {
-            
+          "nombreEmpleado": "Juan Perez",
+          "puesto": "Analista"
         }
-    ],
-    "departamentos": [
+      ],
+      "id": "JnWzVwdUXg4"
+    },
+    {
+      "nombreDepartamento": "Ventas",
+      "listaEmpleados": [
         {
-            
+          "nombreEmpleado": "Maria Lopez",
+          "puesto": "Vendedora"
         }
-    ]
+      ],
+      "id": "yaLko8v6p5k"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
