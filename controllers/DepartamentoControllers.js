@@ -1,12 +1,13 @@
-const conexion = require('../config/db');
+const { getDepartamentos, putDepartamento } = require('../services/serviceDepartamento');
 const Empleado = require('../models/Empleado');
 const Departamento = require('../models/Departamento');
 
-exports.agregarEmpleados = (req, res) => {
-    const { nombreEmpleado, puesto } = req.body
+exports.agregarEmpleados = async (req, res) => {
+    const { nombreDepartamento, nombreEmpleado, puesto } = req.body
     const empleado = new Empleado(nombreEmpleado, puesto)
+    this.nombreDepartamento = nombreDepartamento
 
-    const departamentosDeEmpresa = JSON.parse(localStorage.getItem("departamentos")) || [] /* Cargar los departamentos registrados en el sistema */
+    const departamentosDeEmpresa = await getDepartamentos() /* Cargar los departamentos registrados en el sistema (db.json en lugar de localStorage.getItem) */
     const departamentoEnStorage = departamentosDeEmpresa.find(d => d.nombreDepartamento === this.nombreDepartamento)
 
 
@@ -25,7 +26,7 @@ exports.agregarEmpleados = (req, res) => {
 
 
         departamentoEnStorage.listaEmpleados = this.listaEmpleados /* Actualizar la lista en el registro global */
-        localStorage.setItem("departamentos", JSON.stringify(departamentosDeEmpresa))
+        await putDepartamento(departamentoEnStorage.id, departamentoEnStorage) /* Guardar en db.json en lugar de localStorage.setItem */
 
         console.log("Empleado agregado: " + empleado.nombreEmpleado + " al departamento " + this.nombreDepartamento);
         res.status(200).json({ message: "Empleado agregado exitosamente" });
@@ -33,9 +34,9 @@ exports.agregarEmpleados = (req, res) => {
 }
 
 
-exports.mostrarEmpleados = (req, res) => {
+exports.mostrarEmpleados = async (req, res) => {
     console.log("Empleados del departamento: ", this.nombreDepartamento);
-    const buscarEmpleados = JSON.parse(localStorage.getItem("departamentos") || [])
+    const buscarEmpleados = await getDepartamentos() /* Cargar desde db.json en lugar de localStorage.getItem */
     const existenEmpleados = buscarEmpleados.find(d => d.nombreDepartamento === this.nombreDepartamento)
     if (!existenEmpleados || !existenEmpleados.listaEmpleados || existenEmpleados.listaEmpleados.length === 0) {
 
