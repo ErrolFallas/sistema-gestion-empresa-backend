@@ -58,7 +58,7 @@ console.log("---Informacion del departamento de QA(3)---");
 departamento3.mostrarEmpleados()
 
 
-function menu() {
+/* function menu() {
     let entrar = true
     while (entrar === true) {
         let opcion = prompt("Digita alguna de las opciones:\n 1. Crear un departamento.\n2. Agregar un empleado a un departamento.\n3. Mostrar la info de la empresa\n4. Salir del sistema")
@@ -81,7 +81,7 @@ function menu() {
     }
 }
 
-menu()
+menu() */
  
 
 

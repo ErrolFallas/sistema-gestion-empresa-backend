@@ -3,10 +3,10 @@ const Departamento = require('../models/Departamento');
 const Empresa = require('../models/Empresa');
 
 exports.agregarDepartamentos = async (req, res) => {
-    const { nombreDepartamento, listaEmpleados } = req.body
-    const departamento = new Departamento(nombreDepartamento, listaEmpleados)
+    const { nombre,departamentos } = req.body
+    const empresa = new Empresa(nombre,departamentos)
 
-    this.departamentos = await getDepartamentos() /* Cargar los departamentos registrados en el sistema (db.json en lugar de localStorage) */
+    const existeEmpresa = await getEmpresa() /* Cargar los departamentos registrados en el sistema (db.json en lugar de localStorage) */
 
     // Solo agregar si el departamento no existe ya (evita duplicados)
     const existe = this.departamentos.some(d => d.nombreDepartamento === departamento.nombreDepartamento)
@@ -14,7 +14,9 @@ exports.agregarDepartamentos = async (req, res) => {
         this.departamentos.push(departamento)
         await postDepartamento({ nombreDepartamento: departamento.nombreDepartamento, listaEmpleados: departamento.listaEmpleados }) /* Guardar en db.json en lugar de localStorage.setItem */
         console.log("Departamento registrado:", departamento.nombreDepartamento)
+        
         res.status(200).json({ message: "Departamento agregado exitosamente" });
+    
     }
 }
 
