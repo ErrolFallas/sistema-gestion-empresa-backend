@@ -7,31 +7,31 @@ exports.agregarEmpleados = async (req, res) => {
     try {
         const { nombreDepartamento, listaEmpleados } = req.body
         const ocuparDepartamento = new Departamento(nombreDepartamento, listaEmpleados)
-        
+
         const departamentosDeEmpresa = await getEmpresa()
-        const departamentoEnStorage = departamentosDeEmpresa.find(d => d.departamentos === ocuparDepartamento.nombreDepartamento)
+        const departamentoEnStorage = departamentosDeEmpresa.find(d => d.departamentos && d.departamentos.includes(ocuparDepartamento.nombreDepartamento));
 
         if (!departamentoEnStorage) {
             return res.status(404).json({ message: "Departamento inexistente en el sistema." });
-        } 
+        }
 
-        const revisarEmpleadosDelSistema= await getDepartamentos()
-        let depActual = revisarEmpleadosDelSistema.find(d => d.nombre === ocuparDepartamento.nombreDepartamento)
-        
+        const revisarEmpleadosDelSistema = await getDepartamentos()
+        let depActual = revisarEmpleadosDelSistema.find(d => d.nombreDepartamento === ocuparDepartamento.nombreDepartamento)
+
         if (!depActual) {
             await postDepartamento(ocuparDepartamento.nombreDepartamento, [ocuparDepartamento.listaEmpleados])
             res.status(200).json({ message: "Empleado agregado exitosamente" });
         } else {
-            const existe = depActual.empleados.some(e => e.nombreEmpleado === ocuparDepartamento.listaEmpleados.nombreEmpleado)
+            const existe = depActual.listaEmpleados.some(e => e.nombreEmpleado === ocuparDepartamento.listaEmpleados.nombreEmpleado)
             if (!existe) {
-                const nuevosEmpleados = [...depActual.empleados, ocuparDepartamento.listaEmpleados]
-                await updateDepartamento(depActual.nombre, nuevosEmpleados, depActual.id)
+                depActual.listaEmpleados.push(ocuparDepartamento.listaEmpleados);
+                await updateDepartamento(depActual.nombreDepartamento, depActual.listaEmpleados, depActual.id)
                 res.status(200).json({ message: "Empleado agregado exitosamente" });
             } else {
                 res.status(400).json({ message: "Empleado ya existe en el departamento" });
             }
         }
-    } catch(err) {
+    } catch (err) {
         console.error(err)
         res.status(500).json({ message: "Error interno del servidor" })
     }

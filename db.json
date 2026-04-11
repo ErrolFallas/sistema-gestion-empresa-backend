@@ -2,8 +2,19 @@
   "Empresa": [
     {
       "nombre": "MiGranEmpresa",
-      "departamentos": "Ventas",
+      "departamentos": [
+        "Ventas",
+        "Marketing",
+        "Contabilidad"
+      ],
       "id": "P72z0lpUUUA"
+    },
+    {
+      "nombreEmpresa": "ConstructoraSA",
+      "departamentos": [
+        "Obras"
+      ],
+      "id": "kDSakwDTGY0"
     }
   ],
   "departamentos": [
@@ -16,6 +27,16 @@
         }
       ],
       "id": "nHrq-vog3_g"
+    },
+    {
+      "nombreDepartamento": "Obras",
+      "listaEmpleados": [
+        {
+          "nombreEmpleado": "Roberto",
+          "puesto": "Ingeniero"
+        }
+      ],
+      "id": "l5DK9nHokA8"
     }
   ],
   "Empleado": [],

@@ -18,9 +18,9 @@ async function getEmpresa() {
     }
 }
 
-async function postEmpresa(nombre, departamentos) {
+async function postEmpresa(nombreEmpresa, departamentos) {
     try {
-        const Data = { nombre, departamentos };
+        const Data = { nombreEmpresa, departamentos };
 
         const response = await fetch("http://localhost:3005/Empresa", {
             method: 'POST',
@@ -42,9 +42,9 @@ async function postEmpresa(nombre, departamentos) {
     }
 }
 
-async function updateEmpresa(nombre, departamentos, id) {
+async function updateEmpresa(nombreEmpresa, departamentos, id) {
     try {
-        const Data = { nombre, departamentos };
+        const Data = { nombreEmpresa, departamentos };
 
         const response = await fetch(`http://localhost:3005/Empresa/${id}`, {
             method: 'PUT',

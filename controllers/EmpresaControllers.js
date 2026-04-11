@@ -1,29 +1,42 @@
-const { getEmpresa, postEmpresa } = require('../services/serviceEmpresa');
+const { getEmpresa, postEmpresa, updateEmpresa } = require('../services/serviceEmpresa');
 const Departamento = require('../models/Departamento');
 const Empresa = require('../models/Empresa');
 
 exports.agregarDepartamentos = async (req, res) => {
-    const { nombreEmpresa,departamentos } = req.body
-    const nuevaEmpresa = new Empresa(nombreEmpresa,departamentos)
+    try {
+        const { nombreEmpresa, departamentos } = req.body;
+        const nuevaEmpresa = new Empresa(nombreEmpresa, departamentos);
 
-    const informacionEmpresa = await getEmpresa() /* Cargar los departamentos registrados en el sistema (db.json en lugar de localStorage) */
+        const informacionEmpresa = await getEmpresa();
 
-    // Solo agregar si el departamento no existe ya (evita duplicados)
-    const existeDepartamento = informacionEmpresa.some(d => d.departamentos === nuevaEmpresa.departamentos )
-    if (!existeDepartamento) {
-        const respuesta = await postEmpresa(nuevaEmpresa.nombreEmpresa, nuevaEmpresa.departamentos) /* Guardar en db.json en lugar de localStorage.setItem */
-        if(respuesta){
-            console.log("Departamento registrado:", nuevaEmpresa.nombreEmpresa)
-            res.status(201).json({ message: "Departamento agregado exitosamente" });
-        }else{
-            res.status(500).json({ message: "Error al agregar el departamento" });
+        let empresaActual = informacionEmpresa.find(e => e.nombreEmpresa === nuevaEmpresa.nombreEmpresa);
+
+        if (!empresaActual) {
+            // Si no existe la empresa, se crea con un array que contiene este departamento
+            await postEmpresa(nuevaEmpresa.nombreEmpresa, [nuevaEmpresa.departamentos]);
+            return res.status(201).json({ message: "Departamento agregado exitosamente" });
+        } else {
+            // Si la empresa existe, verificamos si el departamento ya está en la lista
+            let existeDepartamento = empresaActual.departamentos.some(d => d === nuevaEmpresa.departamentos);
+
+            if (!existeDepartamento) {
+                empresaActual.departamentos.push(nuevaEmpresa.departamentos);
+                // Se hace un update simulando un PATCH
+                await updateEmpresa(empresaActual.nombreEmpresa, empresaActual.departamentos, empresaActual.id);
+                return res.status(200).json({ message: "departamentos actualizados" });
+            } else {
+                return res.status(400).json({ message: "El departamento ya existe en la empresa" });
+            }
         }
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Error interno del servidor" });
     }
 }
 
 exports.mostrarInfoEmpresa = async (req, res) => {
     const informacionEmpresa = await getEmpresa() /* Cargar desde db.json en lugar de localStorage */
-    console.log("Nombre de la empresa: " + informacionEmpresa.nombre);
+    console.log("Nombre de la empresa: " + informacionEmpresa.nombreEmpresa);
     console.log("Informacion de cada departamento");
     informacionEmpresa.forEach(departamento => {
         console.log("Nombre del departamento: " + departamento.nombreDepartamento);
