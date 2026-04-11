@@ -1,6 +1,6 @@
 class Empresa {
-    constructor(nombre, departamentos = []) {
-        this.nombre = nombre
+    constructor(nombreEmpresa, departamentos = []) {
+        this.nombreEmpresa = nombreEmpresa
         this.departamentos = departamentos
     }
 }

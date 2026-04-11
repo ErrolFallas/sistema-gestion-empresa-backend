@@ -1,30 +1,31 @@
-const { getDepartamentos, postDepartamento } = require('../services/serviceEmpresa');
+const { getEmpresa, postEmpresa } = require('../services/serviceEmpresa');
 const Departamento = require('../models/Departamento');
 const Empresa = require('../models/Empresa');
 
 exports.agregarDepartamentos = async (req, res) => {
-    const { nombre,departamentos } = req.body
-    const empresa = new Empresa(nombre,departamentos)
+    const { nombreEmpresa,departamentos } = req.body
+    const nuevaEmpresa = new Empresa(nombreEmpresa,departamentos)
 
-    const existeEmpresa = await getEmpresa() /* Cargar los departamentos registrados en el sistema (db.json en lugar de localStorage) */
+    const informacionEmpresa = await getEmpresa() /* Cargar los departamentos registrados en el sistema (db.json en lugar de localStorage) */
 
     // Solo agregar si el departamento no existe ya (evita duplicados)
-    const existe = this.departamentos.some(d => d.nombreDepartamento === departamento.nombreDepartamento)
-    if (!existe) {
-        this.departamentos.push(departamento)
-        await postDepartamento({ nombreDepartamento: departamento.nombreDepartamento, listaEmpleados: departamento.listaEmpleados }) /* Guardar en db.json en lugar de localStorage.setItem */
-        console.log("Departamento registrado:", departamento.nombreDepartamento)
-        
-        res.status(200).json({ message: "Departamento agregado exitosamente" });
-    
+    const existeDepartamento = informacionEmpresa.some(d => d.departamentos === nuevaEmpresa.departamentos)
+    if (!existeDepartamento) {
+        const respuesta = await postEmpresa(nuevaEmpresa.nombreEmpresa, nuevaEmpresa.departamentos) /* Guardar en db.json en lugar de localStorage.setItem */
+        if(respuesta){
+            console.log("Departamento registrado:", nuevaEmpresa.nombreEmpresa)
+            res.status(201).json({ message: "Departamento agregado exitosamente" });
+        }else{
+            res.status(500).json({ message: "Error al agregar el departamento" });
+        }
     }
 }
 
 exports.mostrarInfoEmpresa = async (req, res) => {
-    this.departamentos = await getDepartamentos() /* Cargar desde db.json en lugar de localStorage */
-    console.log("Nombre de la empresa: " + this.nombre);
+    const informacionEmpresa = await getEmpresa() /* Cargar desde db.json en lugar de localStorage */
+    console.log("Nombre de la empresa: " + informacionEmpresa.nombre);
     console.log("Informacion de cada departamento");
-    this.departamentos.forEach(departamento => {
+    informacionEmpresa.forEach(departamento => {
         console.log("Nombre del departamento: " + departamento.nombreDepartamento);
         console.log("Lista de empleados:");
         departamento.listaEmpleados.forEach(emp => {

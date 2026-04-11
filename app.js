@@ -13,7 +13,7 @@ app.use('/api/departamento', DepartamentoRoutes);
 app.use('/api/empleado', EmpleadoRoutes);
 app.use('/api/empresa', EmpresaRoutes);
 
-const PORT = 3001;/* donde se levanta el servidor */
+const PORT = 3000;/* donde se levanta el servidor */
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en el puerto http://localhost:${PORT}`);

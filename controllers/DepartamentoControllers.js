@@ -1,35 +1,38 @@
-const { getDepartamentos, patchDepartamento } = require('../services/serviceDepartamento');
+const { getDepartamentos, postDepartamento, updateDepartamento } = require('../services/serviceDepartamento');
+const { getEmpresa } = require('../services/serviceEmpresa');
 const Empleado = require('../models/Empleado');
 const Departamento = require('../models/Departamento');
 
 exports.agregarEmpleados = async (req, res) => {
-    const { nombreDepartamento, nombreEmpleado, puesto } = req.body
-    const empleado = new Empleado(nombreEmpleado, puesto)
-    this.nombreDepartamento = nombreDepartamento
+    const { nombreDepartamento, listaEmpleados } = req.body
+    const ocuparDepartamento = new Departamento(nombreDepartamento, listaEmpleados)
+    
 
-    const departamentosDeEmpresa = await getDepartamentos() /* Cargar los departamentos registrados en el sistema (db.json en lugar de localStorage.getItem) */
-    const departamentoEnStorage = departamentosDeEmpresa.find(d => d.nombreDepartamento === this.nombreDepartamento)
+    const departamentosDeEmpresa = await getEmpresa() /* Cargar los departamentos registrados en el sistema (db.json en lugar de localStorage.getItem) */
+    const departamentoEnStorage = departamentosDeEmpresa.find(d => d.departamentos === ocuparDepartamento.nombreDepartamento)
 
 
     if (!departamentoEnStorage) {
-        console.log("Error: Departamento inexistente en el sistema.");
-        return;
+        res.status(404).json({ message: "Departamento inexistente en el sistema." });
     } /* Validar si el departamento existe antes de intentar guardar empleados */
 
 
-    this.listaEmpleados = departamentoEnStorage.listaEmpleados || []; /* Sincronizar la lista de memoria con la de almacenamiento para no perder datos previos */
+    const revisarEmpleadosDelSistema= await getDepartamentos()
 
 
-    const existe = this.listaEmpleados.some(e => e.nombreEmpleado === empleado.nombreEmpleado)
+    const existe = revisarEmpleadosDelSistema.some(e => e.listaEmpleados.nombreEmpleado === ocuparDepartamento.listaEmpleados.nombreEmpleado)
     if (!existe) {
-        this.listaEmpleados.push(empleado) /* Solo agregar si el empleado no existe en este departamento (evita duplicados) */
-
-
-        departamentoEnStorage.listaEmpleados = this.listaEmpleados /* Actualizar la lista en el registro global */
-        await patchDepartamento(departamentoEnStorage.id, { listaEmpleados: this.listaEmpleados }) /* Guardar en db.json usando PATCH */
+        if(existe.listaEmpleados.length === 0){
+            const respuesta = await postDepartamento(ocuparDepartamento.nombreDepartamento, ocuparDepartamento.listaEmpleados) /* Solo agregar si el empleado no existe en este departamento (evita duplicados) */
+        }else{
+            const actualizacion = await updateDepartamento(departamentoEnStorage.id, { listaEmpleados: ocuparDepartamento.listaEmpleados }) /* Guardar en db.json usando PATCH */
+        }
 
         console.log("Empleado agregado: " + empleado.nombreEmpleado + " al departamento " + this.nombreDepartamento);
         res.status(200).json({ message: "Empleado agregado exitosamente" });
+    }
+    else{
+        res.status(400).json({ message: "Empleado ya existe en el departamento" });
     }
 }
 

@@ -1,35 +1,74 @@
-/* =======================
-   GET DEPARTAMENTOS
-======================= */
-async function getDepartamentos() {
-    try {
-        const respuesta = await fetch("http://localhost:3000/departamentos");
-        const datosDepartamentos = await respuesta.json();
-        return datosDepartamentos;
-    } catch (error) {
-        console.error("Error al obtener departamentos", error);
-    }
-}
 
-
-/* =======================
-   PATCH DEPARTAMENTO
-   (actualiza un departamento existente, en este caso su lista de empleados)
-======================= */
-async function patchDepartamento(id, departamento) {
+async function getDepartamentO() {
     try {
-        const respuesta = await fetch(`http://localhost:3000/departamentos/${id}`, {
-            method: "PATCH",
+        const response = await fetch('http://localhost:3005/Departamento', {
+            method: 'GET',
             headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(departamento)
+                'Content-Type': 'application/json'
+            }
         });
 
-        return await respuesta.json();
+        if (!response.ok) {
+            throw new Error('Error fetching Departamento');
+        }
+
+        return await response.json();
     } catch (error) {
-        console.error("Error al actualizar departamento", error);
+        console.error('Error fetching Departamento:', error);
+        throw error;
     }
 }
 
-module.exports = { getDepartamentos, patchDepartamento };
+async function postDepartamento(nombre, empleados) {
+    try {
+        const Data = { nombre, empleados };
+
+        const response = await fetch("http://localhost:3005/Departamento", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(Data)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Error en POST");
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error posting Departamento:', error);
+        throw error;
+    }
+}
+
+async function updateDepartamento(nombre, empleados, id) {
+    try {
+        const Data = { nombre, departamentos };
+
+        const response = await fetch(`http://localhost:3005/Departamento/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(Data)
+        });
+
+        if (!response.ok) {
+            throw new Error("Error en PUT");
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error update Departamento:', error);
+        throw error;
+    }
+}
+
+
+module.exports = {
+    getDepartamentO,
+    postDepartamento,
+    updateDepartamento
+};
