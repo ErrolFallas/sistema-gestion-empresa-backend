@@ -1,9 +1,23 @@
 {
-  "empresa":{
-    
-  },
-  "departamentos": [
-    
+  "Empresa": [
+    {
+      "nombre": "MiGranEmpresa",
+      "departamentos": "Ventas",
+      "id": "P72z0lpUUUA"
+    }
   ],
-  "Empleado":[]
+  "departamentos": [
+    {
+      "nombre": "Ventas",
+      "empleados": [
+        {
+          "nombreEmpleado": "Juan",
+          "puesto": "Gerente"
+        }
+      ],
+      "id": "nHrq-vog3_g"
+    }
+  ],
+  "Empleado": [],
+  "$schema": "./node_modules/json-server/schema.json"
 }

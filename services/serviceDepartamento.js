@@ -1,7 +1,7 @@
 
-async function getDepartamentO() {
+async function getDepartamentos() {
     try {
-        const response = await fetch('http://localhost:3005/Departamento', {
+        const response = await fetch('http://localhost:3005/departamentos', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -23,7 +23,7 @@ async function postDepartamento(nombre, empleados) {
     try {
         const Data = { nombre, empleados };
 
-        const response = await fetch("http://localhost:3005/Departamento", {
+        const response = await fetch("http://localhost:3005/departamentos", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -45,9 +45,9 @@ async function postDepartamento(nombre, empleados) {
 
 async function updateDepartamento(nombre, empleados, id) {
     try {
-        const Data = { nombre, departamentos };
+        const Data = { nombre, empleados };
 
-        const response = await fetch(`http://localhost:3005/Departamento/${id}`, {
+        const response = await fetch(`http://localhost:3005/departamentos/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -68,7 +68,7 @@ async function updateDepartamento(nombre, empleados, id) {
 
 
 module.exports = {
-    getDepartamentO,
+    getDepartamentos,
     postDepartamento,
     updateDepartamento
 };

@@ -9,7 +9,7 @@ exports.agregarDepartamentos = async (req, res) => {
     const informacionEmpresa = await getEmpresa() /* Cargar los departamentos registrados en el sistema (db.json en lugar de localStorage) */
 
     // Solo agregar si el departamento no existe ya (evita duplicados)
-    const existeDepartamento = informacionEmpresa.some(d => d.departamentos === nuevaEmpresa.departamentos)
+    const existeDepartamento = informacionEmpresa.some(d => d.departamentos === nuevaEmpresa.departamentos )
     if (!existeDepartamento) {
         const respuesta = await postEmpresa(nuevaEmpresa.nombreEmpresa, nuevaEmpresa.departamentos) /* Guardar en db.json en lugar de localStorage.setItem */
         if(respuesta){

@@ -4,35 +4,36 @@ const Empleado = require('../models/Empleado');
 const Departamento = require('../models/Departamento');
 
 exports.agregarEmpleados = async (req, res) => {
-    const { nombreDepartamento, listaEmpleados } = req.body
-    const ocuparDepartamento = new Departamento(nombreDepartamento, listaEmpleados)
-    
+    try {
+        const { nombreDepartamento, listaEmpleados } = req.body
+        const ocuparDepartamento = new Departamento(nombreDepartamento, listaEmpleados)
+        
+        const departamentosDeEmpresa = await getEmpresa()
+        const departamentoEnStorage = departamentosDeEmpresa.find(d => d.departamentos === ocuparDepartamento.nombreDepartamento)
 
-    const departamentosDeEmpresa = await getEmpresa() /* Cargar los departamentos registrados en el sistema (db.json en lugar de localStorage.getItem) */
-    const departamentoEnStorage = departamentosDeEmpresa.find(d => d.departamentos === ocuparDepartamento.nombreDepartamento)
+        if (!departamentoEnStorage) {
+            return res.status(404).json({ message: "Departamento inexistente en el sistema." });
+        } 
 
-
-    if (!departamentoEnStorage) {
-        res.status(404).json({ message: "Departamento inexistente en el sistema." });
-    } /* Validar si el departamento existe antes de intentar guardar empleados */
-
-
-    const revisarEmpleadosDelSistema= await getDepartamentos()
-
-
-    const existe = revisarEmpleadosDelSistema.some(e => e.listaEmpleados.nombreEmpleado === ocuparDepartamento.listaEmpleados.nombreEmpleado)
-    if (!existe) {
-        if(existe.listaEmpleados.length === 0){
-            const respuesta = await postDepartamento(ocuparDepartamento.nombreDepartamento, ocuparDepartamento.listaEmpleados) /* Solo agregar si el empleado no existe en este departamento (evita duplicados) */
-        }else{
-            const actualizacion = await updateDepartamento(departamentoEnStorage.id, { listaEmpleados: ocuparDepartamento.listaEmpleados }) /* Guardar en db.json usando PATCH */
+        const revisarEmpleadosDelSistema= await getDepartamentos()
+        let depActual = revisarEmpleadosDelSistema.find(d => d.nombre === ocuparDepartamento.nombreDepartamento)
+        
+        if (!depActual) {
+            await postDepartamento(ocuparDepartamento.nombreDepartamento, [ocuparDepartamento.listaEmpleados])
+            res.status(200).json({ message: "Empleado agregado exitosamente" });
+        } else {
+            const existe = depActual.empleados.some(e => e.nombreEmpleado === ocuparDepartamento.listaEmpleados.nombreEmpleado)
+            if (!existe) {
+                const nuevosEmpleados = [...depActual.empleados, ocuparDepartamento.listaEmpleados]
+                await updateDepartamento(depActual.nombre, nuevosEmpleados, depActual.id)
+                res.status(200).json({ message: "Empleado agregado exitosamente" });
+            } else {
+                res.status(400).json({ message: "Empleado ya existe en el departamento" });
+            }
         }
-
-        console.log("Empleado agregado: " + empleado.nombreEmpleado + " al departamento " + this.nombreDepartamento);
-        res.status(200).json({ message: "Empleado agregado exitosamente" });
-    }
-    else{
-        res.status(400).json({ message: "Empleado ya existe en el departamento" });
+    } catch(err) {
+        console.error(err)
+        res.status(500).json({ message: "Error interno del servidor" })
     }
 }
 
