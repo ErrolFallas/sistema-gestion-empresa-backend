@@ -1,4 +1,5 @@
 const { getEmpresa, postEmpresa, updateEmpresa } = require('../services/serviceEmpresa');
+const { getDepartamentos } = require('../services/serviceDepartamento');
 const Departamento = require('../models/Departamento');
 const Empresa = require('../models/Empresa');
 
@@ -35,15 +36,49 @@ exports.agregarDepartamentos = async (req, res) => {
 }
 
 exports.mostrarInfoEmpresa = async (req, res) => {
-    const informacionEmpresa = await getEmpresa() /* Cargar desde db.json en lugar de localStorage */
-    console.log("Nombre de la empresa: " + informacionEmpresa.nombreEmpresa);
-    console.log("Informacion de cada departamento");
-    informacionEmpresa.forEach(departamento => {
-        console.log("Nombre del departamento: " + departamento.nombreDepartamento);
-        console.log("Lista de empleados:");
-        departamento.listaEmpleados.forEach(emp => {
-            console.log(emp.nombreEmpleado, "-", emp.puesto)
+    try {
+        const { nombreEmpresa } = req.body; 
+        if (!nombreEmpresa) {
+            return res.status(400).json({ message: "Por favor envíe el nombreEmpresa en el body" });
+        }
+
+        const informacionEmpresa = await getEmpresa();
+        
+       
+        const informacionCompletaEmpresa = informacionEmpresa.find(e => e.nombreEmpresa === nombreEmpresa);
+
+        if (!informacionCompletaEmpresa) {
+            return res.status(404).json({ message: "No existe la empresa" });
+        }
+
+        const departamentos = await getDepartamentos();
+        
+        // Buscar detalladamente los departamentos de esta empresa
+        const departamentosDeLaEmpresa = departamentos.filter(d => {
+            const matchName = d.nombreDepartamento || d.nombre;
+            return informacionCompletaEmpresa.departamentos.includes(matchName);
         });
-    });
-    res.status(200).json({ message: "Informacion de la empresa mostrada exitosamente" });
+
+        if (departamentosDeLaEmpresa.length === 0) {
+            // Solo info de empresa
+            return res.status(200).json({
+                message: "Informacion de la empresa mostrada exitosamente",
+                data: {
+                    empresa: informacionCompletaEmpresa
+                }
+            });
+        } else {
+            // Info de empresa y departamentos vinculados
+            return res.status(200).json({ 
+                message: "Informacion de la empresa mostrada exitosamente", 
+                data: {
+                    empresa: informacionCompletaEmpresa,
+                    departamentosDetalle: departamentosDeLaEmpresa
+                }
+            });
+        }
+    } catch(err) {
+        console.error(err);
+        return res.status(500).json({ message: "Error del servidor al mostrar información" });
+    }
 }

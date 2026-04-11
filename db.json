@@ -1,7 +1,7 @@
 {
   "Empresa": [
     {
-      "nombre": "MiGranEmpresa",
+      "nombreEmpresa": "MiGranEmpresa",
       "departamentos": [
         "Ventas",
         "Marketing",
@@ -19,8 +19,8 @@
   ],
   "departamentos": [
     {
-      "nombre": "Ventas",
-      "empleados": [
+      "nombreDepartamento": "Ventas",
+      "listaEmpleados": [
         {
           "nombreEmpleado": "Juan",
           "puesto": "Gerente"
