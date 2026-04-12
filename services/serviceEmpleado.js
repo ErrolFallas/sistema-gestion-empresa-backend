@@ -1,14 +1,14 @@
 /* =======================
    GET DEPARTAMENTOS
 ======================= */
-async function getEmpleados() {
+async function getDepartamentos() {
     try {
-        const respuesta = await fetch("http://localhost:3005/Empleado");
-        const datosEmpleados = await respuesta.json();
-        return datosEmpleados;
+        const respuesta = await fetch("http://localhost:3005/departamentos");
+        const datosDepartamentos = await respuesta.json();
+        return datosDepartamentos;
     } catch (error) {
         console.error("Error al obtener la informacion del empleado", error);
     }
 }
 
-module.exports = { getEmpleados };
+module.exports = { getDepartamentos };
