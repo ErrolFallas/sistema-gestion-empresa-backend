@@ -47,26 +47,40 @@ exports.agregarEmpleados = async (req, res) => {
 
 
 exports.mostrarEmpleados = async (req, res) => {
-    console.log("Empleados del departamento: ", this.nombreDepartamento);
-    const buscarEmpleados = await getDepartamentos() /* Cargar desde db.json en lugar de localStorage.getItem */
-    const existenEmpleados = buscarEmpleados.find(d => d.nombreDepartamento === this.nombreDepartamento)
-    if (!existenEmpleados || !existenEmpleados.listaEmpleados || existenEmpleados.listaEmpleados.length === 0) {
-
-        console.log("No hay registro");
-
-
-    } else {
-        existenEmpleados.listaEmpleados.forEach(departamento => {
-            if (departamento.nombreEmpleado === "") {
-                console.log("No hay empleado");
-            } else {
-                console.log("Nombre: ", departamento.nombreEmpleado);
-                console.log("Puesto: ", departamento.puesto);
-                res.status(200).json({ message: "Informacion del departamento mostrada exitosamente" });
-            }
-        });
-
+try {
+    const { nombreDepartamento } = req.params;
+    if (!nombreDepartamento) {
+        return res.status(400).json({ message: "Por favor envíe el nombreDepartamento como un parámetro de la url" });
     }
 
+    const informacionDepartamento = await getDepartamentos();
+    const informacionCompletaDepartamento = informacionDepartamento.find(e => e.nombreDepartamento === nombreDepartamento);
 
+    if (!informacionCompletaDepartamento) {
+        return res.status(404).json({ message: "No existe el departamento" });
+    }
+
+    const inforrmacionListaEmpleados = informacionCompletaDepartamento.listaEmpleados.filter(e => e.nombreEmpleado !== "")
+    if (inforrmacionListaEmpleados.length === 0) {
+        return res.status(200).json({
+            message: "Informacion del departamento mostrada exitosamente, no hay empleados registrados",
+            data: {
+                departamento: informacionCompletaDepartamento
+            }
+        });
+    }
+    else {
+        return res.status(200).json({
+            message: "Informacion del departamento mostrada exitosamente",
+            data: {
+                nombreDepartamento: informacionCompletaDepartamento.nombreDepartamento,
+                listaEmpleados: informacionCompletaDepartamento.listaEmpleados,
+                nombreEmpresa: informacionCompletaDepartamento.nombreEmpresa
+            }
+        });
+    }
+} catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Error del servidor al mostrar información" });
+}
 }

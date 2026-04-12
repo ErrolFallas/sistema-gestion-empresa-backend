@@ -50,26 +50,28 @@ exports.mostrarInfoEmpresa = async (req, res) => {
         }
 
         const departamentos = await getDepartamentos();
-        // Buscar detalladamente los departamentos de esta empresa
-        const departamentosDeLaEmpresa = departamentos.filter(d => {
-            informacionCompletaEmpresa.departamentos.includes(d.nombreDepartamento);
-        });
+        // Buscar departamentos que pertenezcan a esta empresa por nombreEmpresa
+        const departamentosDeLaEmpresa = departamentos.filter(d => d.nombreEmpresa === nombreEmpresa);
 
         if (departamentosDeLaEmpresa.length === 0) {
             // Solo info de empresa
             return res.status(200).json({
                 message: "Informacion de la empresa mostrada exitosamente",
                 data: {
-                    empresa: informacionCompletaEmpresa
+                    empresa: informacionCompletaEmpresa.nombreEmpresa,
+                    departamentos: informacionCompletaEmpresa.departamentos
                 }
             });
         } else {
-            // Info de empresa y departamentos vinculados
+            // Info de empresa y departamentos vinculados con detalle
             return res.status(200).json({ 
                 message: "Informacion de la empresa mostrada exitosamente", 
                 data: {
-                    empresa: informacionCompletaEmpresa,
-                    departamentosDetalle: departamentosDeLaEmpresa
+                    empresa: informacionCompletaEmpresa.nombreEmpresa,
+                    departamentos: departamentosDeLaEmpresa.map(d => ({
+                        nombreDepartamento: d.nombreDepartamento,
+                        listaEmpleados: d.listaEmpleados
+                    }))
                 }
             });
         }
