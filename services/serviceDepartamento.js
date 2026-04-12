@@ -19,9 +19,9 @@ async function getDepartamentos() {
     }
 }
 
-async function postDepartamento(nombreDepartamento, listaEmpleados) {
+async function postDepartamento(nombreDepartamento, listaEmpleados, nombreEmpresa) {
     try {
-        const Data = { nombreDepartamento, listaEmpleados };
+        const Data = { nombreDepartamento, listaEmpleados, nombreEmpresa };
 
         const response = await fetch("http://localhost:3005/departamentos", {
             method: 'POST',
@@ -43,9 +43,9 @@ async function postDepartamento(nombreDepartamento, listaEmpleados) {
     }
 }
 
-async function updateDepartamento(nombreDepartamento, listaEmpleados, id) {
+async function updateDepartamento(nombreDepartamento, listaEmpleados, nombreEmpresa, id) {
     try {
-        const Data = { nombreDepartamento, listaEmpleados };
+        const Data = { nombreDepartamento, listaEmpleados, nombreEmpresa };
 
         const response = await fetch(`http://localhost:3005/departamentos/${id}`, {
             method: 'PUT',

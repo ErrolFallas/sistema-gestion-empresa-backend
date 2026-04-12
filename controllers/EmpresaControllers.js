@@ -39,12 +39,10 @@ exports.mostrarInfoEmpresa = async (req, res) => {
     try {
         const { nombreEmpresa } = req.params; 
         if (!nombreEmpresa) {
-            return res.status(400).json({ message: "Por favor envíe el nombreEmpresa en el body" });
+            return res.status(400).json({ message: "Por favor envíe el nombreEmpresa como un parámetro de la url" });
         }
 
         const informacionEmpresa = await getEmpresa();
-        
-       
         const informacionCompletaEmpresa = informacionEmpresa.find(e => e.nombreEmpresa === nombreEmpresa);
 
         if (!informacionCompletaEmpresa) {
@@ -52,7 +50,6 @@ exports.mostrarInfoEmpresa = async (req, res) => {
         }
 
         const departamentos = await getDepartamentos();
-        
         // Buscar detalladamente los departamentos de esta empresa
         const departamentosDeLaEmpresa = departamentos.filter(d => {
             informacionCompletaEmpresa.departamentos.includes(d.nombreDepartamento);

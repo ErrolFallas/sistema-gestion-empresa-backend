@@ -28,6 +28,7 @@
           "puesto": "Gerente"
         }
       ],
+      "nombreEmpresa": "MiGranEmpresa",
       "id": "nHrq-vog3_g"
     },
     {
@@ -38,6 +39,7 @@
           "puesto": "Ingeniero"
         }
       ],
+      "nombreEmpresa": "ConstructoraSA",
       "id": "l5DK9nHokA8"
     }
   ],
