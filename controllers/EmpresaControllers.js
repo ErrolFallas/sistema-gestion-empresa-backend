@@ -20,7 +20,7 @@ exports.agregarDepartamentos = async (req, res) => {
             // Si la empresa existe, verificamos si el departamento ya está en la lista
             let existeDepartamento = empresaActual.departamentos.some(d => d === nuevaEmpresa.departamentos);
 
-            if (!existeDepartamento) {
+                if (!existeDepartamento) {
                 empresaActual.departamentos.push(nuevaEmpresa.departamentos);
                 // Se hace un update simulando un PATCH
                 await updateEmpresa(empresaActual.nombreEmpresa, empresaActual.departamentos, empresaActual.id);
@@ -37,7 +37,7 @@ exports.agregarDepartamentos = async (req, res) => {
 
 exports.mostrarInfoEmpresa = async (req, res) => {
     try {
-        const { nombreEmpresa } = req.body; 
+        const { nombreEmpresa } = req.params; 
         if (!nombreEmpresa) {
             return res.status(400).json({ message: "Por favor envíe el nombreEmpresa en el body" });
         }
@@ -55,8 +55,7 @@ exports.mostrarInfoEmpresa = async (req, res) => {
         
         // Buscar detalladamente los departamentos de esta empresa
         const departamentosDeLaEmpresa = departamentos.filter(d => {
-            const matchName = d.nombreDepartamento || d.nombre;
-            return informacionCompletaEmpresa.departamentos.includes(matchName);
+            informacionCompletaEmpresa.departamentos.includes(d.nombreDepartamento);
         });
 
         if (departamentosDeLaEmpresa.length === 0) {

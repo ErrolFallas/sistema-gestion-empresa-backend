@@ -12,7 +12,9 @@
     {
       "nombreEmpresa": "ConstructoraSA",
       "departamentos": [
-        "Obras"
+        "Obras",
+        "Contabilidad",
+        "RRHH"
       ],
       "id": "kDSakwDTGY0"
     }
