@@ -15,9 +15,22 @@
       "departamentos": [
         "Obras",
         "Contabilidad",
-        "RRHH"
+        "RRHH",
+        "Desarrollo",
+        "Diseño"
       ],
       "id": "kDSakwDTGY0"
+    },
+    {
+      "nombreEmpresa": "Fressia-ExplotacionLaboral",
+      "departamentos": [
+        [
+          "QA",
+          "RRHH",
+          "Marketing"
+        ]
+      ],
+      "id": "ZO131MzfldI"
     }
   ],
   "departamentos": [
@@ -46,6 +59,23 @@
       ],
       "nombreEmpresa": "ConstructoraSA",
       "id": "l5DK9nHokA8"
+    },
+    {
+      "nombreDepartamento": "RRHH",
+      "listaEmpleados": [
+        [
+          {
+            "nombreEmpleado": "Nora Figueroa",
+            "puesto": "Manager de Entrevistas"
+          },
+          {
+            "nombreEmpleado": "Steven Salas",
+            "puesto": "CEO de Programming"
+          }
+        ]
+      ],
+      "nombreEmpresa": "ConstructoraSA",
+      "id": "TStnYx0lA6w"
     }
   ],
   "Empleado": [],

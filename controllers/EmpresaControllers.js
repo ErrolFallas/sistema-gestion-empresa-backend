@@ -37,13 +37,13 @@ exports.agregarDepartamentos = async (req, res) => {
 
 exports.mostrarInfoEmpresa = async (req, res) => {
     try {
-        const { nombreEmpresa } = req.params; 
-        if (!nombreEmpresa) {
-            return res.status(400).json({ message: "Por favor envíe el nombreEmpresa como un parámetro de la url" });
+        const { id } = req.params; 
+        if (!id) {
+            return res.status(400).json({ message: "Por favor envíe el id de la empresa como un parámetro de la url" });
         }
 
         const informacionEmpresa = await getEmpresa();
-        const informacionCompletaEmpresa = informacionEmpresa.find(e => e.nombreEmpresa === nombreEmpresa);
+        const informacionCompletaEmpresa = informacionEmpresa.find(e => e.id === id);
 
         if (!informacionCompletaEmpresa) {
             return res.status(404).json({ message: "No existe la empresa" });
@@ -51,7 +51,7 @@ exports.mostrarInfoEmpresa = async (req, res) => {
 
         const departamentos = await getDepartamentos();
         // Buscar departamentos que pertenezcan a esta empresa por nombreEmpresa
-        const departamentosDeLaEmpresa = departamentos.filter(d => d.nombreEmpresa === nombreEmpresa);
+        const departamentosDeLaEmpresa = departamentos.filter(d => d.id === id);
 
         if (departamentosDeLaEmpresa.length === 0) {
             // Solo info de empresa

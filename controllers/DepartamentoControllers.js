@@ -48,13 +48,13 @@ exports.agregarEmpleados = async (req, res) => {
 
 exports.mostrarEmpleados = async (req, res) => {
 try {
-    const { nombreDepartamento } = req.params;
-    if (!nombreDepartamento) {
-        return res.status(400).json({ message: "Por favor envíe el nombreDepartamento como un parámetro de la url" });
+    const { id } = req.params;
+    if (!id) {
+        return res.status(400).json({ message: "Por favor envíe el id del departamento como un parámetro de la url" });
     }
 
     const informacionDepartamento = await getDepartamentos();
-    const informacionCompletaDepartamento = informacionDepartamento.find(e => e.nombreDepartamento === nombreDepartamento);
+    const informacionCompletaDepartamento = informacionDepartamento.find(e => e.id === id);
 
     if (!informacionCompletaDepartamento) {
         return res.status(404).json({ message: "No existe el departamento" });
